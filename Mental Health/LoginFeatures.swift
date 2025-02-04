@@ -29,17 +29,27 @@ func userLogin(email: String, password: String) {
     }
 }
 
+func application(_ app: UIApplication,
+                 open url: URL,
+                 options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+  return GIDSignIn.sharedInstance.handle(url)
+} //boilerplate from firebase to return to app after redirection to google
+
+
+
 func googleLogin() {
     
 }
 
+
 func userLogout() {
+    if GIDSignIn.sharedInstance.hasPreviousSignIn(){
+        GIDSignIn.sharedInstance.signOut()
+        print("User logged out sucessfully.")
+        return
+    }
     do {
         try Auth.auth().signOut()
-        if GIDSignIn.sharedInstance.hasPreviousSignIn(){
-            GIDSignIn.sharedInstance.signOut()
-        }
-        
         print("User logged out successfully.")
     } catch let signOutError {
         print("Error signing out: \(signOutError.localizedDescription)")

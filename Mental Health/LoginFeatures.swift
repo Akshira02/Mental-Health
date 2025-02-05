@@ -29,14 +29,6 @@ func userLogin(email: String, password: String) {
     }
 }
 
-func application(_ app: UIApplication,
-                 open url: URL,
-                 options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-  return GIDSignIn.sharedInstance.handle(url)
-} //boilerplate from firebase to return to app after redirection to google
-
-
-
 func googleLogin() {
     
 }

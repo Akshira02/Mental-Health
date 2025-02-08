@@ -17,7 +17,7 @@ struct Mental_HealthApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView()
         }
     }
 }

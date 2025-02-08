@@ -2,3 +2,4 @@
 package-lock.json
 .DS_Store
 GoogleService-Info.plist
+.env

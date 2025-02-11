@@ -38,7 +38,7 @@ struct LoginView: View {
                         .padding()
                 }
                 
-                Button(action: {userSignUp(email: email, password: password)}) {
+                NavigationLink(destination: SignUpView()) {
                     Text("Sign Up")
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -56,25 +56,15 @@ struct LoginView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
+                
                 .padding()
+                NavigationLink(destination: ProfileView(), isActive: $isLoggedIn){
+                    EmptyView()
+                }
             }
-            .padding()
-            NavigationLink(destination: ProfileView(), isActive: $isLoggedIn){
-                EmptyView()
-            }
-            .hidden()
         }
     }
     
-    func userSignUp(email: String, password: String){
-        Auth.auth().createUser(withEmail: email, password: password){ (result, error) in
-            if let error = error {
-                print("Error signing up: \(error.localizedDescription)")
-                return
-            }
-            print("User signed up sucessfully: \(result?.user.uid ?? "")")
-        }
-    }
 
     func userLogin(email: String, password: String) {
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
@@ -108,3 +98,4 @@ struct LoginView: View {
     }
 
 }
+

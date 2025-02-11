@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		782E494A2D5C06AF00A18027 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 782E49492D5C06AF00A18027 /* FirebaseFirestore */; };
 		78AD8AB32D50A9D4006D788F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 78AD8AB22D50A9D4006D788F /* FirebaseAuth */; };
 		78AD8AB62D50ABFA006D788F /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 78AD8AB52D50ABFA006D788F /* GoogleSignIn */; };
 		78AD8AB82D50ABFA006D788F /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 78AD8AB72D50ABFA006D788F /* GoogleSignInSwift */; };
@@ -68,6 +69,7 @@
 				78C106502D50A3A7001255C4 /* FirebaseAnalytics in Frameworks */,
 				78AD8AB82D50ABFA006D788F /* GoogleSignInSwift in Frameworks */,
 				78C106582D50A3A7001255C4 /* FirebaseAppDistribution-Beta in Frameworks */,
+				782E494A2D5C06AF00A18027 /* FirebaseFirestore in Frameworks */,
 				78C106542D50A3A7001255C4 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				78C106522D50A3A7001255C4 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				78AD8AB62D50ABFA006D788F /* GoogleSignIn in Frameworks */,
@@ -147,6 +149,7 @@
 				78AD8AB22D50A9D4006D788F /* FirebaseAuth */,
 				78AD8AB52D50ABFA006D788F /* GoogleSignIn */,
 				78AD8AB72D50ABFA006D788F /* GoogleSignInSwift */,
+				782E49492D5C06AF00A18027 /* FirebaseFirestore */,
 			);
 			productName = "Mental Health";
 			productReference = 5AA7451D2D4ED17D00B36A32 /* Mental Health.app */;
@@ -612,6 +615,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		782E49492D5C06AF00A18027 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78C1064E2D50A2AD001255C4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
 		78AD8AB22D50A9D4006D788F /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 78C1064E2D50A2AD001255C4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

@@ -40,7 +40,7 @@ struct LoginView: View {
                 
                 NavigationLink(destination: SignUpView()) {
                     Text("Sign Up")
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: 300)
                         .padding()
                         .background(Color.blue)
                         .foregroundColor(.white)
@@ -50,7 +50,16 @@ struct LoginView: View {
                 
                 Button(action: {userLogin(email: email, password: password)}) {
                     Text("Login")
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: 300)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                
+                Button(action: {googleLogin()}) {
+                    Text("Sign in with Google")
+                        .frame(maxWidth: 300)
                         .padding()
                         .background(Color.blue)
                         .foregroundColor(.white)
@@ -77,7 +86,7 @@ struct LoginView: View {
     }
 
     func googleLogin() {
-        
+        //implement google login
     }
 
 

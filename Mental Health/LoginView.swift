@@ -86,8 +86,63 @@ struct LoginView: View {
     }
 
     func googleLogin() {
-        //implement google login
+        // 1. Get client ID from Firebase config
+        guard let clientID = FirebaseApp.app()?.options.clientID else {
+            print("No client ID found in Firebase config.")
+            return
+        }
+        
+        // 2. Create Google Sign-In configuration object
+        let config = GIDConfiguration(clientID: clientID)
+        
+        // 3. Get the top-most view controller
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootViewController = windowScene.windows.first?.rootViewController else {
+            print("Could not find root view controller.")
+            return
+        }
+        
+        // 4. Assign the configuration to the shared instance
+        GIDSignIn.sharedInstance.configuration = config
+        
+        // 5. Start the sign-in flow
+        GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { signInResult, error in
+            if let error = error {
+                print("Google Sign-In error: \(error.localizedDescription)")
+                return
+            }
+            
+            // 6. Retrieve the tokens
+            guard let signInResult = signInResult else {
+                print("No sign-in result returned.")
+                return
+            }
+            let user = signInResult.user
+            
+            guard let idToken = user.idToken?.tokenString else {
+                print("Missing ID token")
+                return
+            }
+            let accessToken = user.accessToken.tokenString
+            
+            // 7. Create a Firebase credential
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                           accessToken: accessToken)
+            
+            // 8. Sign in to Firebase
+            Auth.auth().signIn(with: credential) { authResult, error in
+                if let error = error {
+                    print("Firebase sign in error: \(error.localizedDescription)")
+                    return
+                }
+                
+                // Success! Navigate or set isLoggedIn = true, etc.
+                print("User signed in with Google and Firebase!")
+                isLoggedIn = true
+            }
+        }
     }
+
 
 
     func userLogout() {

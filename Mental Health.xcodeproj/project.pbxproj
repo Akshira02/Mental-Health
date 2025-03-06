@@ -16,6 +16,7 @@
 		78C106542D50A3A7001255C4 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 78C106532D50A3A7001255C4 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		78C106562D50A3A7001255C4 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 78C106552D50A3A7001255C4 /* FirebaseAppCheck */; };
 		78C106582D50A3A7001255C4 /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 78C106572D50A3A7001255C4 /* FirebaseAppDistribution-Beta */; };
+		ADEF74A22D77DA8C00322436 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ADEF748D2D77DA8C00322436 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +40,7 @@
 		5AA7451D2D4ED17D00B36A32 /* Mental Health.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mental Health.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AA7452D2D4ED17F00B36A32 /* Mental HealthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mental HealthTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AA745372D4ED17F00B36A32 /* Mental HealthUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mental HealthUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADEF748D2D77DA8C00322436 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -96,6 +98,7 @@
 		5AA745142D4ED17D00B36A32 = {
 			isa = PBXGroup;
 			children = (
+				ADEF748D2D77DA8C00322436 /* GoogleService-Info.plist */,
 				5AA7451F2D4ED17D00B36A32 /* Mental Health */,
 				5AA745302D4ED17F00B36A32 /* Mental HealthTests */,
 				5AA7453A2D4ED17F00B36A32 /* Mental HealthUITests */,
@@ -254,6 +257,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADEF74A22D77DA8C00322436 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,19 +442,23 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mental Health/Preview Content\"";
+				DEVELOPMENT_TEAM = VB6N5HD2Q5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Mental-Health-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Hieu Hoang";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "d3c.Mental-Health";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.d3c.mental-health";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -466,19 +474,23 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mental Health/Preview Content\"";
+				DEVELOPMENT_TEAM = VB6N5HD2Q5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Mental-Health-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Hieu Hoang";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "d3c.Mental-Health";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.d3c.mental-health";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

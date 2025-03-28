@@ -2,102 +2,141 @@
 //  SignUpView.swift
 //  Mental Health
 //
-//  Created by Nolan Ching on 2/11/25.
-//
+
 import SwiftUI
-import Firebase
 import FirebaseAuth
 import FirebaseFirestore
-import FirebaseCore
 
 let db = Firestore.firestore()
 
 struct SignUpView: View {
-    @State private var email: String = ""
-    @State private var password: String = ""
-    @State private var name: String = ""
+    @State private var email = ""
+    @State private var password = ""
     @State private var errorMessage: String?
+    @State private var showAlert = false
     @State private var isSignedUp: Bool = false
-    
+
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("Sign Up")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding()
-                
-                TextField("Name", text: $name)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                
-                TextField("Email", text: $email)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .autocapitalization(.none)
-                    .padding()
-                
-                SecureField("Password", text: $password)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                
-                if let error = errorMessage {
-                    Text(error)
-                        .foregroundColor(.red)
-                        .padding()
-                }
-                
-                
-                Button(action: {
-                    userSignUp(email: email, password: password, name: name) { success in
-                        if success {
-                            isSignedUp = true
-                        }
+            ZStack {
+                Color("lavenderColor")
+                    .ignoresSafeArea()
+
+                VStack(spacing: 20) {
+                    Spacer()
+
+                    Image("loginIcon")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 150, height: 150)
+
+                    Text("Create an Account")
+                        .font(.custom("Alexandria", size: 24))
+                        .foregroundColor(.black)
+
+                    customTextField(title: "Email *", text: $email)
+                    customSecureField(title: "Password *", text: $password)
+
+                    // Sign Up Button
+                    Button(action: {
+                        userSignUp()
+                    }) {
+                        Image("SignUpButton")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 40)
+                            .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 4)
                     }
-                }){
-                    Text("Sign Up!")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    .padding(.top, 10)
+
+                    NavigationLink(destination: LoginWithEmailView()) {
+                        Text("Already have an account? Log in")
+                            .font(.custom("Alexandria", size: 16))
+                            .foregroundColor(.blue)
+                            .padding(.top, 10)
+                    }
+
+                    Spacer()
                 }
-                .padding()
+                .padding(.horizontal, 20)
             }
-            .padding()
-            NavigationLink(destination: ProfileView(), isActive: $isSignedUp){
-                EmptyView()
+            .navigationDestination(isPresented: $isSignedUp) {
+                GetProfileView()
             }
-            .hidden()
+            .alert("Sign Up Error", isPresented: $showAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage ?? "Something went wrong.")
+            }
         }
     }
-    func saveUserInDB(uid: String, email: String, name: String, completion: @escaping(Bool)->Void){
-        let userData: [String: Any] = ["uid": uid, "email": email, "name": name]
-        
-        db.collection("users").document(uid).setData(userData) {
-            error in
+
+    func userSignUp() {
+        email = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+
+        guard !email.isEmpty else {
+            errorMessage = "Please enter your email."
+            showAlert = true
+            return
+        }
+
+        let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailFormat)
+        guard emailPredicate.evaluate(with: email) else {
+            errorMessage = "Please enter a valid email address."
+            showAlert = true
+            return
+        }
+
+        // 🔐 Detailed password rule check
+        if let passwordError = passwordValidationError(password) {
+            errorMessage = passwordError
+            showAlert = true
+            return
+        }
+
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
-                print("Error writing document: \(error)")
-                completion(false)
+                errorMessage = error.localizedDescription
+                showAlert = true
             } else {
-                print("Document successfully written!")
-                completion(true)
+                isSignedUp = true
             }
         }
     }
-    
-    func userSignUp(email:String, password:String, name:String, completion: @escaping(Bool)->Void){
-        Auth.auth().createUser(withEmail: email, password: password){ (authResult, error) in
-            if let error = error {
-                self.errorMessage = error.localizedDescription
-                completion(false)
-                return
-            }
-            
-            guard let user = authResult?.user else {
-                completion(false)
-                return
-            }
-            saveUserInDB(uid: user.uid, email: email, name: name, completion: completion)
+
+
+    func passwordValidationError(_ password: String) -> String? {
+        if password.count < 8 {
+            return "Password must be at least 8 characters long."
         }
+
+        let uppercase = NSPredicate(format: "SELF MATCHES %@", ".*[A-Z]+.*").evaluate(with: password)
+        if !uppercase {
+            return "Password must include at least one uppercase letter."
+        }
+
+        let lowercase = NSPredicate(format: "SELF MATCHES %@", ".*[a-z]+.*").evaluate(with: password)
+        if !lowercase {
+            return "Password must include at least one lowercase letter."
+        }
+
+        let number = NSPredicate(format: "SELF MATCHES %@", ".*[0-9]+.*").evaluate(with: password)
+        if !number {
+            return "Password must include at least one number."
+        }
+
+        let special = NSPredicate(format: "SELF MATCHES %@", ".*[!@#\\?\\]]+.*").evaluate(with: password)
+        if !special {
+            return "Password must include at least one special character (! @ # ? ])."
+        }
+
+        return nil
+    }
+}
+
+struct SignUpView_Previews: PreviewProvider {
+    static var previews: some View {
+        SignUpView()
     }
 }

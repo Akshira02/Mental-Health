@@ -13,6 +13,8 @@ struct QuestionaireView: View {
     }
 }
 
-#Preview {
-    QuestionaireView()
+struct QuestionaireView_Previews: PreviewProvider {
+    static var previews: some View {
+        QuestionaireView()
+    }
 }

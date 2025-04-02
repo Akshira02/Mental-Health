@@ -67,6 +67,7 @@ struct GetProfileView: View {
                 Question1View(progress: 0.1) // Starting progress at 20%
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 
     func saveProfile() {
@@ -76,6 +77,7 @@ struct GetProfileView: View {
             isProfileSaved = true
         }
     }
+    
 }
 
 

@@ -9,12 +9,17 @@ import FirebaseAuth
 import GoogleSignIn
 import AuthenticationServices
 import CryptoKit
+import FirebaseFirestore
+
 
 struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var errorMessage: String?
     @State private var isLoggedIn: Bool = false
+    @State private var goToGetProfile = false
+    @State private var goToProfile = false
+
     
     // Create a coordinator instance
 //    @StateObject private var appleSignInCoordinator = AppleSignInCoordinator()
@@ -125,50 +130,73 @@ struct LoginView: View {
     
     // Google Login
     func googleLogin() {
-        guard let clientID = FirebaseApp.app()?.options.clientID else {
-            print("No client ID found in Firebase config.")
-            return
-        }
-        
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         let config = GIDConfiguration(clientID: clientID)
-        
+
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let rootViewController = windowScene.windows.first?.rootViewController else {
-            print("Could not find root view controller.")
-            return
-        }
-        
+              let rootViewController = windowScene.windows.first?.rootViewController else { return }
+
         GIDSignIn.sharedInstance.configuration = config
         GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { signInResult, error in
             if let error = error {
                 print("Google Sign-In error: \(error.localizedDescription)")
                 return
             }
-            
-            guard let signInResult = signInResult else {
-                print("No sign-in result returned.")
-                return
-            }
+
+            guard let signInResult = signInResult else { return }
             let user = signInResult.user
-            
-            guard let idToken = user.idToken?.tokenString else {
-                print("Missing ID token")
-                return
-            }
+
+            guard let idToken = user.idToken?.tokenString else { return }
             let accessToken = user.accessToken.tokenString
-            
-            let credential = GoogleAuthProvider.credential(withIDToken: idToken,
-                                                           accessToken: accessToken)
+
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
+
             Auth.auth().signIn(with: credential) { authResult, error in
                 if let error = error {
                     print("Firebase sign in error: \(error.localizedDescription)")
                     return
                 }
-                print("User signed in with Google and Firebase!")
-                isLoggedIn = true
+
+                guard let firebaseUser = authResult?.user else { return }
+
+                let db = Firestore.firestore()
+                let userRef = db.collection("users").document(firebaseUser.uid)
+
+                userRef.getDocument { document, error in
+                    if let document = document, document.exists {
+                        let data = document.data()
+                        let quizCompleted = data?["quiz_completed"] as? Bool ?? false
+                        let profileCompleted = data?["profile_completed"] as? Bool ?? false
+
+                        if quizCompleted && profileCompleted {
+                            goToProfile = true
+                        } else {
+                            goToGetProfile = true
+                        }
+                    } else {
+                        // 🆕 New user → Save basic info and go to GetProfileView
+                        let newUser: [String: Any] = [
+                            "uid": firebaseUser.uid,
+                            "email": firebaseUser.email ?? "",
+                            "name": firebaseUser.displayName ?? "",
+                            "quiz_completed": false,
+                            "profile_completed": false
+                        ]
+                        userRef.setData(newUser) { error in
+                            if let error = error {
+                                print("Error saving user: \(error.localizedDescription)")
+                                return
+                            }
+                            goToGetProfile = true
+                        }
+                    }
+                }
+
             }
         }
     }
+
+
     
 //    // MARK: - Apple Sign-In Flow
 //    private func handleAppleSignIn() {

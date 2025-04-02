@@ -1,21 +1,22 @@
 //
-//  Question1View.swift
+//  Question5View.swift
 //  Mental Health
+//
+//  
 //
 
 import SwiftUI
 
-struct Question1View: View {
-    var progress: CGFloat // pass progress from 0 to 1
-
-    @State private var selectedOptions: Set<String> = []
+struct Question5View: View {
+    var progress: CGFloat
+    @EnvironmentObject var surveyData: SurveyData
+    @State private var selectedOption: String?
 
     let options = [
-        "Better Deal With My Emotions",
-        "Navigate Stress And Anxiety",
-        "Manage My Workload",
-        "Practice Regular Self Care",
-        "Gain Confidence And Grow"
+        ("Academic pressure and deadlines", "LOW ENERGY / MOTIVATION", 2),
+        ("Social situations and relationships", "NEED PEER/SOCIAL SUPPORT SYSTEM", 4),
+        ("Uncertainty about the future", "ANXIETY DUE TO LIFE CIRCUMSTANCES", 4),
+        ("Personal expectations and perfectionism", "STRESS DUE TO ACADEMIC PRESSURE", 4)
     ]
 
     var body: some View {
@@ -41,21 +42,21 @@ struct Question1View: View {
                     .frame(width: 150, height: 150)
 
                 VStack(spacing: 5) {
-                    Text("I want to learn how to . . .")
+                    Text("What situations tend to affect your mood the most?")
                         .font(.custom("Alexandria", size: 18))
                         .bold()
                         .foregroundColor(.black)
 
-                    Text("Select all that apply.")
+                    Text("Select one.")
                         .font(.custom("Alexandria", size: 14))
                         .foregroundColor(.gray)
                 }
 
-                ForEach(options, id: \.self) { option in
+                ForEach(options, id: \.0) { option in
                     Button(action: {
-                        toggleSelection(option)
+                        selectedOption = option.0
                     }) {
-                        Text(option)
+                        Text(option.0)
                             .font(.custom("Alexandria", size: 16))
                             .foregroundColor(.black)
                             .padding()
@@ -64,23 +65,27 @@ struct Question1View: View {
                             .cornerRadius(10)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(selectedOptions.contains(option) ? Color.purple : Color.clear, lineWidth: 2)
+                                    .stroke(selectedOption == option.0 ? Color.purple : Color.clear, lineWidth: 2)
                             )
                     }
                 }
 
-
-
-                // ✅ Navigation continues to next question
-                NavigationLink(destination: Question2View(progress: progress + 1/7)) {
+                NavigationLink(destination: {
+                    if let selected = selectedOption,
+                       let match = options.first(where: { $0.0 == selected }) {
+                        surveyData.addPoints(for: match.1, points: match.2)
+                    }
+                    return Question6View(progress: progress + 1/7)
+                }()) {
                     Image("NextButton")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 160, height: 50)
                         .shadow(radius: 4)
                 }
+                .disabled(selectedOption == nil) // 🚫 disables until user selects
 
-                // ✅ Styled Progress Bar
+
                 ZStack(alignment: .leading) {
                     Capsule()
                         .frame(width: 319, height: 14)
@@ -95,19 +100,12 @@ struct Question1View: View {
             }
             .padding()
         }
-        .navigationBarBackButtonHidden(true)
     }
-
-    func toggleSelection(_ option: String) {
-        if selectedOptions.contains(option) {
-            selectedOptions.remove(option)
-        } else {
-            selectedOptions.insert(option)
-        }
-    }
-    
 }
 
 #Preview {
-    Question1View(progress: 1/7)
+    NavigationStack {
+        Question5View(progress: 5/7)
+            .environmentObject(SurveyData())
+    }
 }

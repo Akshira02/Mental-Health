@@ -41,7 +41,7 @@ struct ProfileView: View {
         let db = Firestore.firestore()
         let userRef = db.collection("users").document(user.uid)
         userRef.getDocument{document, error in
-            if let error = error {
+            if error != nil {
                 return completion(nil)
             }
             

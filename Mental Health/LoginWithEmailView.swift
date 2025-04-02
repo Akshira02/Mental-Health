@@ -83,6 +83,7 @@ struct LoginWithEmailView: View {
                 Text(errorMessage ?? "An unknown error occurred.")
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 
     func userLogin() {
@@ -137,6 +138,7 @@ struct LoginWithEmailView: View {
             showAlert = true
         }
     }
+    
 }
 
 struct LoginWithEmailView_Previews: PreviewProvider {

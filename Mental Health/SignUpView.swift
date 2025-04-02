@@ -69,6 +69,7 @@ struct SignUpView: View {
                 Text(errorMessage ?? "Something went wrong.")
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 
     func userSignUp() {
@@ -133,6 +134,7 @@ struct SignUpView: View {
 
         return nil
     }
+    
 }
 
 struct SignUpView_Previews: PreviewProvider {

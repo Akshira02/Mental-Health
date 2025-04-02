@@ -3,6 +3,11 @@
 //  Mental Health
 //
 
+//
+//  SignUpView.swift
+//  Mental Health
+//
+
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
@@ -37,6 +42,11 @@ struct SignUpView: View {
                     customTextField(title: "Email *", text: $email)
                     customSecureField(title: "Password *", text: $password)
 
+                    // NavigationLink for forward animation
+                    NavigationLink(destination: GetProfileView(), isActive: $isSignedUp) {
+                        EmptyView()
+                    }
+
                     // Sign Up Button
                     Button(action: {
                         userSignUp()
@@ -60,9 +70,7 @@ struct SignUpView: View {
                 }
                 .padding(.horizontal, 20)
             }
-            .navigationDestination(isPresented: $isSignedUp) {
-                GetProfileView()
-            }
+
             .alert("Sign Up Error", isPresented: $showAlert) {
                 Button("OK", role: .cancel) {}
             } message: {
@@ -106,7 +114,6 @@ struct SignUpView: View {
         }
     }
 
-
     func passwordValidationError(_ password: String) -> String? {
         if password.count < 8 {
             return "Password must be at least 8 characters long."
@@ -134,7 +141,6 @@ struct SignUpView: View {
 
         return nil
     }
-    
 }
 
 struct SignUpView_Previews: PreviewProvider {

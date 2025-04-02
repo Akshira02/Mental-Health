@@ -104,9 +104,14 @@ struct LoginView: View {
                     Spacer()
                 }
             }
-            .navigationDestination(isPresented: $isLoggedIn) {
+            .navigationDestination(isPresented: $goToGetProfile) {
+                GetProfileView()
+            }
+
+            .navigationDestination(isPresented: $goToProfile) {
                 ProfileView()
             }
+
         }
         // Observe Apple sign-in success from coordinator
 //        .onReceive(appleSignInCoordinator.$didSignInSuccessfully) { success in

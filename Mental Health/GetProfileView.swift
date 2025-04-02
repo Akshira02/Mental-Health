@@ -4,13 +4,16 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 struct GetProfileView: View {
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var phoneNumber: String = ""
-    @State private var errorMessage: String?
+    @State private var showAlert = false
     @State private var isProfileSaved: Bool = false
+    @EnvironmentObject var surveyData: SurveyData
 
     var body: some View {
         NavigationStack {
@@ -34,13 +37,16 @@ struct GetProfileView: View {
                     customTextField(title: "Last Name *", text: $lastName)
                     customTextField(title: "Phone Number *", text: $phoneNumber)
 
-                    if let error = errorMessage {
-                        Text(error)
-                            .foregroundColor(.red)
-                            .padding()
+                    // ✅ Hidden NavigationLink with forward transition
+                    NavigationLink(
+                        destination: Question1View(progress: 0)
+                            .environmentObject(surveyData),
+                        isActive: $isProfileSaved
+                    ) {
+                        EmptyView()
                     }
 
-                    // Save Profile Button with Imagex
+                    // Save Profile Button with Image
                     Button(action: {
                         saveProfile()
                     }) {
@@ -63,22 +69,25 @@ struct GetProfileView: View {
                 }
                 .padding(.horizontal, 20)
             }
-            .navigationDestination(isPresented: $isProfileSaved) {
-                Question1View(progress: 0.1) // Starting progress at 20%
-            }
         }
         .navigationBarBackButtonHidden(true)
+        .alert("All fields are required.", isPresented: $showAlert) {
+            Button("OK", role: .cancel) { }
+        }
     }
 
     func saveProfile() {
         if firstName.isEmpty || lastName.isEmpty || phoneNumber.isEmpty {
-            errorMessage = "All fields are required."
+            showAlert = true
         } else {
+            surveyData.firstName = firstName
+            surveyData.lastName = lastName
+            surveyData.phoneNumber = phoneNumber
             isProfileSaved = true
         }
     }
-    
 }
+
 
 
 struct GetProfileView_Previews: PreviewProvider {

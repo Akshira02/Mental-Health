@@ -10,8 +10,18 @@ import SwiftUI
 
 struct Question2View: View {
     var progress: CGFloat
+    let safeProgress: CGFloat
+    @State private var showAlert = false
+
+    
+    init(progress: CGFloat = 0) {
+        self.progress = progress
+        self.safeProgress = progress.isFinite ? progress : 0
+    }
+    
     @EnvironmentObject var surveyData: SurveyData
     @State private var selectedOption: String?
+    @State private var goToNext = false
 
     let options = [
         ("Mentally drained and emotionally overwhelmed", "ANXIETY DUE TO LIFE CIRCUMSTANCES", 4),
@@ -47,10 +57,16 @@ struct Question2View: View {
                         .font(.custom("Alexandria", size: 18))
                         .bold()
                         .foregroundColor(.black)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, alignment: .center)
+
 
                     Text("Select one.")
                         .font(.custom("Alexandria", size: 14))
                         .foregroundColor(.gray)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, alignment: .center)
+
                 }
 
                 ForEach(options, id: \.0) { option in
@@ -72,20 +88,28 @@ struct Question2View: View {
                 }
 
                 // ✅ Navigation to next view
-                NavigationLink(destination: {
+                
+
+
+                Button(action: {
                     if let selected = selectedOption,
                        let match = options.first(where: { $0.0 == selected }) {
                         surveyData.addPoints(for: match.1, points: match.2)
+                        goToNext = true
+                    } else {
+                        showAlert = true
                     }
-                    return Question3View(progress: progress + 1/7)
-                }()) {
+                }) {
                     Image("NextButton")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 160, height: 50)
                         .shadow(radius: 4)
                 }
-                .disabled(selectedOption == nil) // 🚫 disables until user selects
+
+
+                .disabled(selectedOption == nil)
+
 
 
                 // ✅ Styled Progress Bar
@@ -95,7 +119,7 @@ struct Question2View: View {
                         .foregroundColor(Color(hex: "#C3B9D1"))
 
                     Capsule()
-                        .frame(width: 319 * progress, height: 14)
+                        .frame(width: 319 * safeProgress, height: 14)
                         .foregroundColor(Color(hex: "#8F81DC"))
                 }
                 .cornerRadius(20)
@@ -103,6 +127,15 @@ struct Question2View: View {
             }
             .padding()
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationDestination(isPresented: $goToNext) {
+            Question3View(progress: progress + 1/7)
+                .environmentObject(surveyData)
+        }
+        .alert("Please choose an answer before continuing.", isPresented: $showAlert) {
+            Button("OK", role: .cancel) { }
+        }
+
     }
 }
 

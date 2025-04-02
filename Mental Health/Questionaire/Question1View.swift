@@ -6,9 +6,17 @@
 import SwiftUI
 
 struct Question1View: View {
-    var progress: CGFloat // pass progress from 0 to 1
+    var progress: CGFloat
+    let safeProgress: CGFloat
+
+    init(progress: CGFloat = 0) {
+        self.progress = progress
+        self.safeProgress = progress.isFinite ? progress : 0
+    }
 
     @State private var selectedOptions: Set<String> = []
+    @State private var goToNext = false
+    @State private var showAlert = false
 
     let options = [
         "Better Deal With My Emotions",
@@ -19,83 +27,99 @@ struct Question1View: View {
     ]
 
     var body: some View {
-        ZStack {
-            Color("lavenderColor").ignoresSafeArea()
+        NavigationStack {
+            ZStack {
+                Color("lavenderColor").ignoresSafeArea()
 
-            VStack(spacing: 20) {
-                Spacer()
+                VStack(spacing: 20) {
+                    Spacer()
 
-                Text("Let’s get to know you better.")
-                    .font(.custom("Alexandria", size: 24))
-                    .foregroundColor(.black)
-                    .multilineTextAlignment(.center)
-
-                Text("Answer a couple questions to get started.")
-                    .font(.custom("Alexandria", size: 16))
-                    .foregroundColor(.black)
-                    .multilineTextAlignment(.center)
-
-                Image("QuestionIcon")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 150, height: 150)
-
-                VStack(spacing: 5) {
-                    Text("I want to learn how to . . .")
-                        .font(.custom("Alexandria", size: 18))
-                        .bold()
+                    Text("Let’s get to know you better.")
+                        .font(.custom("Alexandria", size: 24))
                         .foregroundColor(.black)
+                        .multilineTextAlignment(.center)
 
-                    Text("Select all that apply.")
-                        .font(.custom("Alexandria", size: 14))
-                        .foregroundColor(.gray)
-                }
+                    Text("Answer a couple questions to get started.")
+                        .font(.custom("Alexandria", size: 16))
+                        .foregroundColor(.black)
+                        .multilineTextAlignment(.center)
 
-                ForEach(options, id: \.self) { option in
-                    Button(action: {
-                        toggleSelection(option)
-                    }) {
-                        Text(option)
-                            .font(.custom("Alexandria", size: 16))
-                            .foregroundColor(.black)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.white)
-                            .cornerRadius(10)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(selectedOptions.contains(option) ? Color.purple : Color.clear, lineWidth: 2)
-                            )
-                    }
-                }
-
-
-
-                // ✅ Navigation continues to next question
-                NavigationLink(destination: Question2View(progress: progress + 1/7)) {
-                    Image("NextButton")
+                    Image("QuestionIcon")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 160, height: 50)
-                        .shadow(radius: 4)
-                }
+                        .frame(width: 150, height: 150)
 
-                // ✅ Styled Progress Bar
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .frame(width: 319, height: 14)
-                        .foregroundColor(Color(hex: "#C3B9D1"))
+                    VStack(spacing: 5) {
+                        Text("I want to learn how to . . .")
+                            .font(.custom("Alexandria", size: 18))
+                            .bold()
+                            .foregroundColor(.black)
 
-                    Capsule()
-                        .frame(width: 319 * progress, height: 14)
-                        .foregroundColor(Color(hex: "#8F81DC"))
+                        Text("Select all that apply.")
+                            .font(.custom("Alexandria", size: 14))
+                            .foregroundColor(.gray)
+                    }
+
+                    ForEach(options, id: \.self) { option in
+                        Button(action: {
+                            toggleSelection(option)
+                        }) {
+                            Text(option)
+                                .font(.custom("Alexandria", size: 16))
+                                .foregroundColor(.black)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(selectedOptions.contains(option) ? Color.purple : Color.clear, lineWidth: 2)
+                                )
+                        }
+                    }
+
+                    // 🟢 Next Button with validation
+                    Button(action: {
+                        if selectedOptions.isEmpty {
+                            showAlert = true
+                        } else {
+                            goToNext = true
+                        }
+                    }) {
+                        Image("NextButton")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 160, height: 50)
+                            .shadow(radius: 4)
+                    }
+
+                    // ✅ Styled Progress Bar
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .frame(width: 319, height: 14)
+                            .foregroundColor(Color(hex: "#C3B9D1"))
+
+                        Capsule()
+                            .frame(width: 319 * safeProgress, height: 14)
+                            .foregroundColor(Color(hex: "#8F81DC"))
+                    }
+                    .cornerRadius(20)
+                    .padding(.top, 5)
                 }
-                .cornerRadius(20)
-                .padding(.top, 5)
+                .padding()
             }
-            .padding()
+            .navigationBarBackButtonHidden(true)
+
+            // ✅ Navigate to Question2View if selection is valid
+            .navigationDestination(isPresented: $goToNext) {
+                Question2View(progress: progress + 1/7)
+            }
+
+            // ⚠️ Alert if no option selected
+            .alert("Please select at least one option before continuing.", isPresented: $showAlert) {
+                Button("OK", role: .cancel) { }
+            }
         }
-        .navigationBarBackButtonHidden(true)
     }
 
     func toggleSelection(_ option: String) {
@@ -105,9 +129,8 @@ struct Question1View: View {
             selectedOptions.insert(option)
         }
     }
-    
 }
 
 #Preview {
-    Question1View(progress: 1/7)
+    Question1View(progress: 0)
 }

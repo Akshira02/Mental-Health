@@ -18,11 +18,15 @@ class SurveyData: ObservableObject {
         "LOW ENERGY / MOTIVATION": 0
     ]
 
+    // 🆕 Add user profile fields
+    @Published var firstName: String = ""
+    @Published var lastName: String = ""
+    @Published var phoneNumber: String = ""
+
     func addPoints(for category: String, points: Int) {
         scores[category, default: 0] += points
     }
 
-    // ✅ NEW: Save scores to Firebase Firestore
     func saveToFirestore() {
         guard let userID = Auth.auth().currentUser?.uid else {
             print("User not logged in.")
@@ -30,15 +34,21 @@ class SurveyData: ObservableObject {
         }
 
         let db = Firestore.firestore()
-        let userRef = db.collection("survey_results").document(userID)
+        let userRef = db.collection("Users'info").document(userID)
 
-        userRef.setData(["scores": scores]) { error in
+        let userData: [String: Any] = [
+            "firstName": firstName,
+            "lastName": lastName,
+            "phoneNumber": phoneNumber,
+            "scores": scores
+        ]
+
+        userRef.setData(userData) { error in
             if let error = error {
                 print("❌ Error saving to Firestore: \(error.localizedDescription)")
             } else {
-                print("✅ Survey scores successfully saved to Firestore.")
+                print("✅ Full user data (profile + survey) saved successfully.")
             }
         }
     }
 }
-

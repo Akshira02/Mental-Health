@@ -64,13 +64,12 @@ struct GetProfileView: View {
                 .padding(.horizontal, 20)
             }
 
-            // ✅ Forward navigation to Question1View with environment
+            // ✅ Forward navigation to QuestionaireView with environment
             .navigationDestination(isPresented: $goToQuestion1) {
-                Question1View(progress: 0)
-                    .environmentObject(surveyData)
+                QuestionaireView().environmentObject(surveyData)
             }
 
-            // ✅ Alert
+            // ✅ Al ert
             .alert("All fields are required.", isPresented: $showAlert) {
                 Button("OK", role: .cancel) { }
             }

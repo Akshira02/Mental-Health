@@ -11,7 +11,9 @@ struct LoginWithEmailView: View {
     @State private var password = ""
     @State private var errorMessage: String?
     @State private var showAlert = false
-    @State private var isLoggedIn: Bool = false
+    @State private var isLoggedIn = false
+    @State private var goToSignUp = false
+    @State private var goToLogin = false
 
     var body: some View {
         NavigationStack {
@@ -34,7 +36,7 @@ struct LoginWithEmailView: View {
                     customTextField(title: "Email *", text: $email)
                     customSecureField(title: "Password *", text: $password)
 
-                    // 🔵 Log In Button with Image
+                    // 🔵 Log In Button
                     Button(action: {
                         userLogin()
                     }) {
@@ -46,7 +48,7 @@ struct LoginWithEmailView: View {
                     }
                     .padding(.top, 10)
 
-                    // 🔵 Forgot Password Button
+                    // 🔵 Forgot Password
                     Button(action: {
                         sendPasswordReset()
                     }) {
@@ -56,14 +58,18 @@ struct LoginWithEmailView: View {
                     }
                     .padding(.top, 5)
 
-                    NavigationLink(destination: SignUpView()) {
+                    Button(action: {
+                        goToSignUp = true
+                    }) {
                         Text("Don't have an account? Sign Up")
                             .font(.custom("Alexandria", size: 16))
                             .foregroundColor(.blue)
                             .padding(.top, 10)
                     }
 
-                    NavigationLink(destination: LoginView()) {
+                    Button(action: {
+                        goToLogin = true
+                    }) {
                         Text("Try another login method?")
                             .font(.custom("Alexandria", size: 16))
                             .foregroundColor(.blue)
@@ -76,6 +82,12 @@ struct LoginWithEmailView: View {
             }
             .navigationDestination(isPresented: $isLoggedIn) {
                 ProfileView()
+            }
+            .navigationDestination(isPresented: $goToSignUp) {
+                SignUpView()
+            }
+            .navigationDestination(isPresented: $goToLogin) {
+                LoginView()
             }
             .alert("Notice", isPresented: $showAlert) {
                 Button("OK", role: .cancel) { }
@@ -138,7 +150,6 @@ struct LoginWithEmailView: View {
             showAlert = true
         }
     }
-    
 }
 
 struct LoginWithEmailView_Previews: PreviewProvider {

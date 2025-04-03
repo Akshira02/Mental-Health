@@ -13,12 +13,13 @@ struct customTextField: View {
             Text(title)
                 .font(.custom("Alexandria", size: 16))
                 .foregroundColor(.black)
-            
+
             TextField("", text: $text)
                 .padding()
                 .frame(height: 50)
                 .background(Color.white)
                 .cornerRadius(10)
+                .foregroundColor(.black) // ✅ Ensures text is visible
                 .overlay(RoundedRectangle(cornerRadius: 10)
                             .stroke(Color.gray, lineWidth: 1))
         }
@@ -40,11 +41,13 @@ struct customSecureField: View {
                 .frame(height: 50)
                 .background(Color.white)
                 .cornerRadius(10)
+                .foregroundColor(.black) // ✅ Ensures password text is visible
                 .overlay(RoundedRectangle(cornerRadius: 10)
                             .stroke(Color.gray, lineWidth: 1))
         }
     }
 }
+
 
 struct customButton: View {
     var title: String

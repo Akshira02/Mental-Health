@@ -3,11 +3,6 @@
 //  Mental Health
 //
 
-//
-//  SignUpView.swift
-//  Mental Health
-//
-
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
@@ -19,7 +14,9 @@ struct SignUpView: View {
     @State private var password = ""
     @State private var errorMessage: String?
     @State private var showAlert = false
-    @State private var isSignedUp: Bool = false
+
+    @State private var goToGetProfile = false
+    @State private var goToLogin = false
 
     var body: some View {
         NavigationStack {
@@ -42,12 +39,7 @@ struct SignUpView: View {
                     customTextField(title: "Email *", text: $email)
                     customSecureField(title: "Password *", text: $password)
 
-                    // NavigationLink for forward animation
-                    NavigationLink(destination: GetProfileView(), isActive: $isSignedUp) {
-                        EmptyView()
-                    }
-
-                    // Sign Up Button
+                    // 🔵 Sign Up Button
                     Button(action: {
                         userSignUp()
                     }) {
@@ -59,7 +51,10 @@ struct SignUpView: View {
                     }
                     .padding(.top, 10)
 
-                    NavigationLink(destination: LoginWithEmailView()) {
+                    // 🔁 Navigation triggers via buttons
+                    Button(action: {
+                        goToLogin = true
+                    }) {
                         Text("Already have an account? Log in")
                             .font(.custom("Alexandria", size: 16))
                             .foregroundColor(.blue)
@@ -71,6 +66,15 @@ struct SignUpView: View {
                 .padding(.horizontal, 20)
             }
 
+            // ✅ Navigation destinations
+            .navigationDestination(isPresented: $goToGetProfile) {
+                GetProfileView()
+            }
+            .navigationDestination(isPresented: $goToLogin) {
+                LoginWithEmailView()
+            }
+
+            // ✅ Alert
             .alert("Sign Up Error", isPresented: $showAlert) {
                 Button("OK", role: .cancel) {}
             } message: {
@@ -97,7 +101,6 @@ struct SignUpView: View {
             return
         }
 
-        // 🔐 Detailed password rule check
         if let passwordError = passwordValidationError(password) {
             errorMessage = passwordError
             showAlert = true
@@ -109,7 +112,7 @@ struct SignUpView: View {
                 errorMessage = error.localizedDescription
                 showAlert = true
             } else {
-                isSignedUp = true
+                goToGetProfile = true
             }
         }
     }
@@ -148,3 +151,4 @@ struct SignUpView_Previews: PreviewProvider {
         SignUpView()
     }
 }
+

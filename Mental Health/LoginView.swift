@@ -121,7 +121,7 @@ struct LoginView: View {
 //        }
     }
     
-    // Firebase Email Login (Currently Unused)
+    // Firebase Email Login
     func userLogin(email: String, password: String) {
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
             if let error = error {

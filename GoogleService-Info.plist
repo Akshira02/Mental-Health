@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDUYIc3kLpALxhOtTyUN7QLEezVIEEzQQI</string>
+	<key>BUNDLE_ID</key>
+	<string>com.d3c.mental-health</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleIdentifier</key>
+			<string></string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLIconFile</key>
+			<string></string>
+			<key>CFBundleURLName</key>
+			<string>com.googleusercontent.apps</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1053928264911-3k8s8gme3up8v5ckn4gifgdb38v7ttji
+</string>
+			</array>
+		</dict>
+	</array>
+	<key>CLIENT_ID</key>
+	<string>1053928264911-3k8s8gme3up8v5ckn4gifgdb38v7ttji.apps.googleusercontent.com</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1053928264911</string>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1053928264911:ios:f16a62f0d88d65502393ba</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>PROJECT_ID</key>
+	<string>mental-health-9aaa5</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1053928264911-3k8s8gme3up8v5ckn4gifgdb38v7ttji</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mental-health-9aaa5.firebasestorage.app</string>
+</dict>
+</plist>

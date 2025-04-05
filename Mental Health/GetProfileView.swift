@@ -14,7 +14,7 @@ struct GetProfileView: View {
     @State private var showAlert = false
     @State private var goToQuestion1 = false
 
-    @EnvironmentObject var surveyData: SurveyData
+    @EnvironmentObject var storeData: StoreData
 
     var body: some View {
         NavigationStack {
@@ -66,7 +66,7 @@ struct GetProfileView: View {
 
             // ✅ Forward navigation to QuestionaireView with environment
             .navigationDestination(isPresented: $goToQuestion1) {
-                QuestionaireView().environmentObject(surveyData)
+                QuestionaireView().environmentObject(storeData)
             }
 
             // ✅ Al ert
@@ -81,9 +81,9 @@ struct GetProfileView: View {
         if firstName.isEmpty || lastName.isEmpty || phoneNumber.isEmpty {
             showAlert = true
         } else {
-            surveyData.firstName = firstName
-            surveyData.lastName = lastName
-            surveyData.phoneNumber = phoneNumber
+            storeData.firstName = firstName
+            storeData.lastName = lastName
+            storeData.phoneNumber = phoneNumber
             goToQuestion1 = true
         }
     }
@@ -91,7 +91,7 @@ struct GetProfileView: View {
 
 struct GetProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        GetProfileView().environmentObject(SurveyData())
+        GetProfileView().environmentObject(StoreData())
     }
 }
 

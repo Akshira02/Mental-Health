@@ -16,7 +16,7 @@
 		78C106542D50A3A7001255C4 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 78C106532D50A3A7001255C4 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		78C106562D50A3A7001255C4 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 78C106552D50A3A7001255C4 /* FirebaseAppCheck */; };
 		78C106582D50A3A7001255C4 /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 78C106572D50A3A7001255C4 /* FirebaseAppDistribution-Beta */; };
-		AD393E1E2D9736530083C13E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD393E1D2D9736530083C13E /* GoogleService-Info.plist */; };
+		AD304CAB2D9F90000091676D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD304C7C2D9F869C0091676D /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,7 +40,8 @@
 		5AA7451D2D4ED17D00B36A32 /* Mental Health.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mental Health.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AA7452D2D4ED17F00B36A32 /* Mental HealthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mental HealthTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AA745372D4ED17F00B36A32 /* Mental HealthUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mental HealthUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD393E1D2D9736530083C13E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		AD304C7C2D9F869C0091676D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		AD304C7D2D9F869C0091676D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -98,7 +99,8 @@
 		5AA745142D4ED17D00B36A32 = {
 			isa = PBXGroup;
 			children = (
-				AD393E1D2D9736530083C13E /* GoogleService-Info.plist */,
+				AD304C7C2D9F869C0091676D /* GoogleService-Info.plist */,
+				AD304C7D2D9F869C0091676D /* Info.plist */,
 				5AA7451F2D4ED17D00B36A32 /* Mental Health */,
 				5AA745302D4ED17F00B36A32 /* Mental HealthTests */,
 				5AA7453A2D4ED17F00B36A32 /* Mental HealthUITests */,
@@ -257,7 +259,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD393E1E2D9736530083C13E /* GoogleService-Info.plist in Resources */,
+				AD304CAB2D9F90000091676D /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,7 +447,7 @@
 				DEVELOPMENT_TEAM = VB6N5HD2Q5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "GoogleService-Info.plist";
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Moo'd";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -477,7 +479,7 @@
 				DEVELOPMENT_TEAM = VB6N5HD2Q5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "GoogleService-Info.plist";
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Moo'd";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

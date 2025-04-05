@@ -1,16 +1,13 @@
 //
-//  SurveyData.swift
+//  StoreData.swift
 //  Mental Health
 //
-//
-//
-
 
 import Foundation
 import FirebaseFirestore
 import FirebaseAuth
 
-class SurveyData: ObservableObject {
+class StoreData: ObservableObject {
     @Published var scores: [String: Int] = [
         "ANXIETY DUE TO LIFE CIRCUMSTANCES": 0,
         "NEED PEER/SOCIAL SUPPORT SYSTEM": 0,
@@ -18,25 +15,30 @@ class SurveyData: ObservableObject {
         "LOW ENERGY / MOTIVATION": 0
     ]
 
-    // 🆕 Add user profile fields
+    // User profile info
     @Published var firstName: String = ""
     @Published var lastName: String = ""
     @Published var phoneNumber: String = ""
+    @Published var email: String = ""
 
     func addPoints(for category: String, points: Int) {
         scores[category, default: 0] += points
     }
 
     func saveToFirestore() {
-        guard let userID = Auth.auth().currentUser?.uid else {
+        guard let currentUser = Auth.auth().currentUser else {
             print("User not logged in.")
             return
         }
 
         let db = Firestore.firestore()
-        let userRef = db.collection("Users'info").document(userID)
+        let fullName = "\(firstName) \(lastName)".trimmingCharacters(in: .whitespaces)
+        let documentID = fullName.isEmpty ? currentUser.uid : fullName
+
+        let userRef = db.collection("Users' info").document(documentID)
 
         let userData: [String: Any] = [
+            "email": currentUser.email ?? email,
             "firstName": firstName,
             "lastName": lastName,
             "phoneNumber": phoneNumber,
@@ -47,7 +49,7 @@ class SurveyData: ObservableObject {
             if let error = error {
                 print("❌ Error saving to Firestore: \(error.localizedDescription)")
             } else {
-                print("✅ Full user data (profile + survey) saved successfully.")
+                print("✅ User data (profile + scores) saved successfully.")
             }
         }
     }

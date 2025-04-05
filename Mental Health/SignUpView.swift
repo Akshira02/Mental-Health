@@ -39,7 +39,7 @@ struct SignUpView: View {
                     customTextField(title: "Email *", text: $email)
                     customSecureField(title: "Password *", text: $password)
 
-                    // 🔵 Sign Up Button
+                    // Sign Up Button
                     Button(action: {
                         userSignUp()
                     }) {
@@ -51,7 +51,7 @@ struct SignUpView: View {
                     }
                     .padding(.top, 10)
 
-                    // 🔁 Navigation triggers via buttons
+                    // Navigation triggers via buttons
                     Button(action: {
                         goToLogin = true
                     }) {
@@ -66,7 +66,7 @@ struct SignUpView: View {
                 .padding(.horizontal, 20)
             }
 
-            // ✅ Navigation destinations
+            // Navigation destinations
             .navigationDestination(isPresented: $goToGetProfile) {
                 GetProfileView()
             }
@@ -74,7 +74,7 @@ struct SignUpView: View {
                 LoginWithEmailView()
             }
 
-            // ✅ Alert
+            // Alert
             .alert("Sign Up Error", isPresented: $showAlert) {
                 Button("OK", role: .cancel) {}
             } message: {

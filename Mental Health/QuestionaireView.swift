@@ -14,7 +14,7 @@ struct QuestionData {
 }
 
 struct QuestionaireView: View {
-    @EnvironmentObject var surveyData: SurveyData
+    @EnvironmentObject var storeData: StoreData
     @State private var currentIndex = 0
     @State private var selectedOptions: Set<String> = []
     @State private var showAlert = false
@@ -187,7 +187,7 @@ struct QuestionaireView: View {
             }
             .navigationDestination(isPresented: $isFinished) {
                 ProfileView()
-                    .environmentObject(surveyData)
+                    .environmentObject(storeData)
             }
             .alert("Please choose an answer before continuing.", isPresented: $showAlert) {
                 Button("OK", role: .cancel) {}
@@ -216,7 +216,7 @@ struct QuestionaireView: View {
 
         for selected in selectedOptions {
             if let match = questions[currentIndex].options.first(where: { $0.text == selected }) {
-                surveyData.addPoints(for: match.category, points: match.points)
+                storeData.addPoints(for: match.category, points: match.points)
             }
         }
 
@@ -227,7 +227,7 @@ struct QuestionaireView: View {
                 currentIndex += 1
             }
         } else {
-            surveyData.saveToFirestore()
+            storeData.saveToFirestore()
             isFinished = true
         }
     }
@@ -235,5 +235,5 @@ struct QuestionaireView: View {
 
 #Preview {
     QuestionaireView()
-        .environmentObject(SurveyData())
+        .environmentObject(StoreData())
 }

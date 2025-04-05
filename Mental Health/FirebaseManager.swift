@@ -20,7 +20,7 @@ class FirebaseManager {
 
         let data = categoryScores.mapValues { ["points": $0] }
 
-        db.collection("surveyScores").document(user.uid).setData(data, merge: true) { error in
+        db.collection("storeScores").document(user.uid).setData(data, merge: true) { error in
             if let error = error {
                 print("Error saving data: \(error.localizedDescription)")
                 completion(false)

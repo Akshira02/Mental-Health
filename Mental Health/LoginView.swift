@@ -150,7 +150,6 @@ struct LoginView: View {
 
             guard let signInResult = signInResult else { return }
             let user = signInResult.user
-
             guard let idToken = user.idToken?.tokenString else { return }
             let accessToken = user.accessToken.tokenString
 
@@ -165,41 +164,70 @@ struct LoginView: View {
                 guard let firebaseUser = authResult?.user else { return }
 
                 let db = Firestore.firestore()
-                let userRef = db.collection("users").document(firebaseUser.uid)
+                let email = firebaseUser.email ?? ""
+                let displayName = firebaseUser.displayName ?? ""
+                let uid = firebaseUser.uid
 
-                userRef.getDocument { document, error in
+                // Parse full name
+                let nameParts = displayName.split(separator: " ")
+                let firstName = nameParts.first.map(String.init) ?? ""
+                let lastName = nameParts.dropFirst().joined(separator: " ")
+
+                // Set document ID to "First Last" or UID
+                let fullName = "\(firstName) \(lastName)".trimmingCharacters(in: .whitespaces)
+                let documentID = fullName.isEmpty ? uid : fullName
+                let storeRef = db.collection("Users' info").document(documentID)
+
+                storeRef.getDocument { document, error in
                     if let document = document, document.exists {
+                        // Check if scores and profile fields are filled
                         let data = document.data()
-                        let quizCompleted = data?["quiz_completed"] as? Bool ?? false
-                        let profileCompleted = data?["profile_completed"] as? Bool ?? false
+                        let hasScores = data?["scores"] as? [String: Int] != nil
+                        let hasFirst = (data?["firstName"] as? String)?.isEmpty == false
+                        let hasLast = (data?["lastName"] as? String)?.isEmpty == false
+                        let hasPhone = (data?["phoneNumber"] as? String)?.isEmpty == false
 
-                        if quizCompleted && profileCompleted {
+                        // Update email if needed
+                        storeRef.updateData(["email": email]) { err in
+                            if let err = err {
+                                print("⚠️ Failed to update email: \(err.localizedDescription)")
+                            }
+                        }
+
+                        if hasFirst && hasLast && hasPhone && hasScores {
                             goToProfile = true
                         } else {
                             goToGetProfile = true
                         }
+
                     } else {
-                        // 🆕 New user → Save basic info and go to GetProfileView
-                        let newUser: [String: Any] = [
-                            "uid": firebaseUser.uid,
-                            "email": firebaseUser.email ?? "",
-                            "name": firebaseUser.displayName ?? "",
-                            "quiz_completed": false,
-                            "profile_completed": false
+                        // New user — create entry in same structure as StoreData
+                        let newUserData: [String: Any] = [
+                            "email": email,
+                            "firstName": firstName,
+                            "lastName": lastName,
+                            "phoneNumber": "",
+                            "scores": [
+                                "ANXIETY DUE TO LIFE CIRCUMSTANCES": 0,
+                                "NEED PEER/SOCIAL SUPPORT SYSTEM": 0,
+                                "STRESS DUE TO ACADEMIC PRESSURE": 0,
+                                "LOW ENERGY / MOTIVATION": 0
+                            ]
                         ]
-                        userRef.setData(newUser) { error in
+
+                        storeRef.setData(newUserData) { error in
                             if let error = error {
-                                print("Error saving user: \(error.localizedDescription)")
-                                return
+                                print("❌ Error saving Google user data: \(error.localizedDescription)")
                             }
                             goToGetProfile = true
                         }
                     }
                 }
-
             }
         }
     }
+
+
 
 
     

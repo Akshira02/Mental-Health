@@ -36,7 +36,7 @@ struct LoginWithEmailView: View {
                     customTextField(title: "Email *", text: $email)
                     customSecureField(title: "Password *", text: $password)
 
-                    // 🔵 Log In Button
+                    // Log In Button
                     Button(action: {
                         userLogin()
                     }) {
@@ -48,7 +48,7 @@ struct LoginWithEmailView: View {
                     }
                     .padding(.top, 10)
 
-                    // 🔵 Forgot Password
+                    // Forgot Password
                     Button(action: {
                         sendPasswordReset()
                     }) {

@@ -2,7 +2,7 @@
 //  Mental_HealthApp.swift
 //  Mental Health
 //
-//  Created by Ashwin Charles on 2/1/25.
+//
 //
 
 import SwiftUI
@@ -11,11 +11,9 @@ import Firebase
 @main
 struct Mental_HealthApp: App {
     @State private var showSplash = true
-    @StateObject var surveyData = SurveyData()
+    @StateObject var storeData = StoreData()
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
-    init() {
-        FirebaseApp.configure()
-    }
 
     var body: some Scene {
         WindowGroup {
@@ -30,7 +28,7 @@ struct Mental_HealthApp: App {
                 NavigationStack {
                     LoginView()
                 }
-                .environmentObject(surveyData)
+                .environmentObject(storeData)
             }
         }
     }

@@ -17,6 +17,8 @@ struct SignUpView: View {
 
     @State private var goToGetProfile = false
     @State private var goToLogin = false
+    @State private var isPasswordVisible = false
+
 
     var body: some View {
         NavigationStack {

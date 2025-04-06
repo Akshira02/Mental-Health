@@ -2,6 +2,8 @@
 //  CustomComponents.swift
 //  Mental Health
 
+
+
 import SwiftUI
 
 struct customTextField: View {
@@ -9,45 +11,51 @@ struct customTextField: View {
     @Binding var text: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text(title)
-                .font(.custom("Alexandria", size: 16))
-                .foregroundColor(.black)
-
-            TextField("", text: $text)
-                .padding()
-                .frame(height: 50)
-                .background(Color.white)
-                .cornerRadius(10)
-                .foregroundColor(.black) // ✅ Ensures text is visible
-                .overlay(RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.gray, lineWidth: 1))
-        }
+        TextField(title, text: $text)
+            .padding()
+            .frame(height: 50)
+            .background(Color.white)
+            .cornerRadius(10)
+            .foregroundColor(.black)
+            .overlay(RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.gray, lineWidth: 1))
     }
 }
 
 struct customSecureField: View {
     var title: String
     @Binding var text: String
+    @State private var isPasswordVisible: Bool = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text(title)
-                .font(.custom("Alexandria", size: 16))
-                .foregroundColor(.black)
+        ZStack(alignment: .trailing) {
+            Group {
+                if isPasswordVisible {
+                    TextField(title, text: $text)
+                        .textContentType(.password)
+                } else {
+                    SecureField(title, text: $text)
+                        .textContentType(.password)
+                }
+            }
+            .padding()
+            .frame(height: 50)
+            .background(Color.white)
+            .cornerRadius(10)
+            .foregroundColor(.black)
+            .overlay(RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.gray, lineWidth: 1))
 
-            SecureField("", text: $text)
-                .padding()
-                .frame(height: 50)
-                .background(Color.white)
-                .cornerRadius(10)
-                .foregroundColor(.black) // ✅ Ensures password text is visible
-                .overlay(RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.gray, lineWidth: 1))
+            Button(action: {
+                isPasswordVisible.toggle()
+            }) {
+                Image(systemName: isPasswordVisible ? "eye.slash" : "eye")
+                    .foregroundColor(.gray)
+                    .padding(.trailing, 12)
+            }
         }
     }
 }
-
 
 struct customButton: View {
     var title: String

@@ -17,8 +17,12 @@ struct customTextField: View {
             .background(Color.white)
             .cornerRadius(10)
             .foregroundColor(.black)
-            .overlay(RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.gray, lineWidth: 1))
+            .accentColor(.black) // Caret color
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color(white: 0.4), lineWidth: 1) // Darker border
+            )
+            .foregroundColor(.black)
     }
 }
 
@@ -43,14 +47,17 @@ struct customSecureField: View {
             .background(Color.white)
             .cornerRadius(10)
             .foregroundColor(.black)
-            .overlay(RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.gray, lineWidth: 1))
+            .accentColor(.black) // Caret color
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color(white: 0.4), lineWidth: 1) // Darker border
+            )
 
             Button(action: {
                 isPasswordVisible.toggle()
             }) {
                 Image(systemName: isPasswordVisible ? "eye.slash" : "eye")
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color(white: 0.4)) // Darker gray eye icon
                     .padding(.trailing, 12)
             }
         }

@@ -20,36 +20,28 @@ struct LoginView: View {
     @State private var goToGetProfile = false
     @State private var goToProfile = false
 
-    
-    // Create a coordinator instance
-//    @StateObject private var appleSignInCoordinator = AppleSignInCoordinator()
-    
     var body: some View {
         NavigationStack {
             ZStack {
-                
                 Color("lavenderColor")
                     .ignoresSafeArea()
-                
+
                 VStack(spacing: 20) {
                     Spacer()
-                    
-                    // Cow illustration from Assets
+
                     Image("loginIcon")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 150, height: 150)
-                    
-                    // Title and subtitle
+
                     Text("Hey! Welcome to Moo’d.")
                         .font(.custom("Alexandria", size: 24))
                         .foregroundColor(.black)
-                    
+
                     Text("Login to continue.")
                         .font(.custom("Alexandria", size: 18))
                         .foregroundColor(.black)
-                    
-                    // Google login button
+
                     Button(action: { googleLogin() }) {
                         HStack {
                             Text("Continue with Google")
@@ -65,9 +57,7 @@ struct LoginView: View {
                         .cornerRadius(10)
                     }
                     .padding(.horizontal, 40)
-                    
-                    // Placeholder buttons (not functional yet)
-                    // Email login button now navigates to SignUpView
+
                     NavigationLink(destination: LoginWithEmailView()) {
                         HStack {
                             Text("Continue with Email")
@@ -81,59 +71,19 @@ struct LoginView: View {
                         .cornerRadius(10)
                     }
                     .padding(.horizontal, 40)
-                    
-                    // Apple Login Button
-//                    Button(action: {
-//                        handleAppleSignIn()
-//                    }) {
-//                        HStack {
-//                            Text("Continue with Apple")
-//                                .font(.custom("Alexandrida", size: 16))
-//                            Image("appleIcon")
-//                                .resizable()
-//                                .frame(width: 20, height: 20)
-//                        }
-//                        .padding()
-//                        .frame(maxWidth: .infinity)
-//                        .background(Color.white)
-//                        .foregroundColor(.black)
-//                        .cornerRadius(10)
-//                    }
-//                    .padding(.horizontal, 40)
-                    
+
                     Spacer()
                 }
             }
             .navigationDestination(isPresented: $goToGetProfile) {
                 GetProfileView()
             }
-
             .navigationDestination(isPresented: $goToProfile) {
                 ProfileView()
             }
+        }
+    }
 
-        }
-        // Observe Apple sign-in success from coordinator
-//        .onReceive(appleSignInCoordinator.$didSignInSuccessfully) { success in
-//            if success {
-//                isLoggedIn = true
-//            }
-//        }
-    }
-    
-    // Firebase Email Login
-    func userLogin(email: String, password: String) {
-        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
-            if let error = error {
-                print("Error logging in: \(error.localizedDescription)")
-                errorMessage = error.localizedDescription
-                return
-            }
-            isLoggedIn = true
-        }
-    }
-    
-    // Google Login
     func googleLogin() {
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         let config = GIDConfiguration(clientID: clientID)
@@ -168,26 +118,22 @@ struct LoginView: View {
                 let displayName = firebaseUser.displayName ?? ""
                 let uid = firebaseUser.uid
 
-                // Parse full name
                 let nameParts = displayName.split(separator: " ")
                 let firstName = nameParts.first.map(String.init) ?? ""
                 let lastName = nameParts.dropFirst().joined(separator: " ")
 
-                // Set document ID to "First Last" or UID
                 let fullName = "\(firstName) \(lastName)".trimmingCharacters(in: .whitespaces)
                 let documentID = fullName.isEmpty ? uid : fullName
                 let storeRef = db.collection("Users' info").document(documentID)
 
                 storeRef.getDocument { document, error in
                     if let document = document, document.exists {
-                        // Check if scores and profile fields are filled
                         let data = document.data()
                         let hasScores = data?["scores"] as? [String: Int] != nil
                         let hasFirst = (data?["firstName"] as? String)?.isEmpty == false
                         let hasLast = (data?["lastName"] as? String)?.isEmpty == false
                         let hasPhone = (data?["phoneNumber"] as? String)?.isEmpty == false
 
-                        // Update email if needed
                         storeRef.updateData(["email": email]) { err in
                             if let err = err {
                                 print("⚠️ Failed to update email: \(err.localizedDescription)")
@@ -199,9 +145,7 @@ struct LoginView: View {
                         } else {
                             goToGetProfile = true
                         }
-
                     } else {
-                        // New user — create entry in same structure as StoreData
                         let newUserData: [String: Any] = [
                             "email": email,
                             "firstName": firstName,
@@ -226,7 +170,7 @@ struct LoginView: View {
             }
         }
     }
-
+}
 
 
 
@@ -366,7 +310,7 @@ struct LoginView: View {
 //        print("Sign in with Apple failed: \(error.localizedDescription)")
 //        didSignInSuccessfully = false
 //    }
-}
+
 
 
 

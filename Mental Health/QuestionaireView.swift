@@ -19,6 +19,7 @@ struct QuestionaireView: View {
     @State private var selectedOptions: Set<String> = []
     @State private var showAlert = false
     @State private var isFinished = false
+    @State private var showLoading = false
 
     let questions: [QuestionData] = [
         QuestionData(
@@ -106,95 +107,103 @@ struct QuestionaireView: View {
 
     var progress: CGFloat {
         guard !questions.isEmpty else { return 0 }
-        return CGFloat(currentIndex) / CGFloat(questions.count)
+        return CGFloat(currentIndex+1) / CGFloat(questions.count)
     }
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color("lavenderColor").ignoresSafeArea()
+            NavigationStack {
+                ZStack {
+                    Color("lavenderColor").ignoresSafeArea()
 
-                VStack(spacing: 20) {
-                    Spacer()
+                    if showLoading {
+                        LoadingView()
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                    isFinished = true
+                                }
+                            }
+                    } else {
+                        VStack(spacing: 20) {
+                            Spacer()
 
-                    Text("Let’s get to know you better.")
-                        .font(.custom("Alexandria", size: 24))
-                        .foregroundColor(.black)
-                        .multilineTextAlignment(.center)
+                            Text("Let’s get to know you better.")
+                                .font(.custom("Alexandria", size: 24))
+                                .foregroundColor(.black)
+                                .multilineTextAlignment(.center)
 
-                    Text("Answer a couple questions to get started.")
-                        .font(.custom("Alexandria", size: 16))
-                        .foregroundColor(.black)
-                        .multilineTextAlignment(.center)
-
-                    Image("QuestionIcon")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 150, height: 150)
-
-                    VStack(spacing: 5) {
-                        Text(questions[currentIndex].question)
-                            .font(.custom("Alexandria", size: 18))
-                            .bold()
-                            .foregroundColor(.black)
-                            .multilineTextAlignment(.center)
-
-                        Text(questions[currentIndex].allowsMultipleSelection ? "Select all that apply." : "Select one.")
-                            .font(.custom("Alexandria", size: 14))
-                            .foregroundColor(.gray)
-                    }
-
-                    ForEach(questions[currentIndex].options, id: \ .text) { option in
-                        Button(action: {
-                            toggleSelection(for: option.text)
-                        }) {
-                            Text(option.text)
+                            Text("Answer a couple questions to get started.")
                                 .font(.custom("Alexandria", size: 16))
                                 .foregroundColor(.black)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color.white)
-                                .cornerRadius(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(selectedOptions.contains(option.text) ? Color.purple : Color.clear, lineWidth: 2)
-                                )
+                                .multilineTextAlignment(.center)
+
+                            Image("QuestionIcon")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 150, height: 150)
+
+                            VStack(spacing: 5) {
+                                Text(questions[currentIndex].question)
+                                    .font(.custom("Alexandria", size: 18))
+                                    .bold()
+                                    .foregroundColor(.black)
+                                    .multilineTextAlignment(.center)
+
+                                Text(questions[currentIndex].allowsMultipleSelection ? "Select all that apply." : "Select one.")
+                                    .font(.custom("Alexandria", size: 14))
+                                    .foregroundColor(.gray)
+                            }
+
+                            ForEach(questions[currentIndex].options, id: \ .text) { option in
+                                Button(action: {
+                                    toggleSelection(for: option.text)
+                                }) {
+                                    Text(option.text)
+                                        .font(.custom("Alexandria", size: 16))
+                                        .foregroundColor(.black)
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color.white)
+                                        .cornerRadius(10)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .stroke(selectedOptions.contains(option.text) ? Color.purple : Color.clear, lineWidth: 2)
+                                        )
+                                }
+                            }
+
+                            Button(action: handleNext) {
+                                Image("NextButton")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 160, height: 50)
+                                    .shadow(radius: 4)
+                            }
+
+                            ZStack(alignment: .leading) {
+                                Capsule()
+                                    .frame(width: 319, height: 14)
+                                    .foregroundColor(Color(hex: "#C3B9D1"))
+
+                                Capsule()
+                                    .frame(width: 319 * progress, height: 14)
+                                    .foregroundColor(Color(hex: "#8F81DC"))
+                            }
+                            .cornerRadius(20)
+                            .padding(.top, 5)
                         }
+                        .padding()
                     }
-
-                    Button(action: handleNext) {
-                        Image("NextButton")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 160, height: 50)
-                            .shadow(radius: 4)
-                    }
-
-
-                    ZStack(alignment: .leading) {
-                        Capsule()
-                            .frame(width: 319, height: 14)
-                            .foregroundColor(Color(hex: "#C3B9D1"))
-
-                        Capsule()
-                            .frame(width: 319 * progress, height: 14)
-                            .foregroundColor(Color(hex: "#8F81DC"))
-                    }
-                    .cornerRadius(20)
-                    .padding(.top, 5)
                 }
-                .padding()
+                .navigationDestination(isPresented: $isFinished) {
+                    ProfileView()
+                        .environmentObject(storeData)
+                }
+                .alert("Please choose an answer before continuing.", isPresented: $showAlert) {
+                    Button("OK", role: .cancel) {}
+                }
+                .navigationBarBackButtonHidden(true)
             }
-            .navigationDestination(isPresented: $isFinished) {
-                ProfileView()
-                    .environmentObject(storeData)
-            }
-            .alert("Please choose an answer before continuing.", isPresented: $showAlert) {
-                Button("OK", role: .cancel) {}
-            }
-            .navigationBarBackButtonHidden(true)
         }
-    }
 
     func toggleSelection(for option: String) {
         if questions[currentIndex].allowsMultipleSelection {
@@ -227,10 +236,16 @@ struct QuestionaireView: View {
                 currentIndex += 1
             }
         } else {
+            // 👇 This will allow the progress bar to visually fill before transitioning
+            showLoading = true
             storeData.saveToFirestore()
-            isFinished = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                isFinished = true
+            }
         }
     }
+
+
 }
 
 #Preview {

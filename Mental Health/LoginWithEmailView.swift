@@ -81,7 +81,7 @@ struct LoginWithEmailView: View {
                                 .padding(.top, 10)
                         }
 
-                        // ✅ NavigationLink with tag and selection for swipe transition
+                        
                         NavigationLink(
                             destination: ProfileView(),
                             tag: AuthNavigation.profile,
@@ -140,7 +140,7 @@ struct LoginWithEmailView: View {
                 print("Login error: \(error.localizedDescription)")
                 errorMessage = "No account found. Either your email or password is incorrect."
                 showAlert = true
-            } else if let user = result?.user {
+            } else if (result?.user) != nil {
                 let db = Firestore.firestore()
 
                 db.collection("Users' info").whereField("email", isEqualTo: email).getDocuments { snapshot, error in

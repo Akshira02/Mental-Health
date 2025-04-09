@@ -82,6 +82,7 @@ struct LoginView: View {
                 ProfileView()
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 
     func googleLogin() {

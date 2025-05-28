@@ -1,0 +1,155 @@
+import SwiftUI
+
+struct DiaryEntry: Identifiable {
+    
+    let id = UUID()
+    let date: String
+    let imageName: String
+    let content: String
+}
+
+struct NotificationView: View {
+    @EnvironmentObject var storeData: StoreData
+
+    @State private var showHomeNav = false
+    @State private var showResource = false
+    @State private var showSetGoal = false
+    @State private var showAnalyticsNav = false
+    @State private var showPet = false
+    @State private var showSettingNav = false
+    @State private var searchText = ""
+    
+    private let navBarHeight: CGFloat = 64
+    
+    let diaryEntries: [DiaryEntry] = [
+        DiaryEntry(date: "May 15, 2025", imageName: "QuestionIcon", content: "I did some yoga this morning..."),
+        DiaryEntry(date: "May 14, 2025", imageName: "Result Cow", content: "I journaled this morning..."),
+        DiaryEntry(date: "May 12, 2025", imageName: "SurveyIcon", content: "Went for a walk in the park...")
+    ]
+    
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color("lavenderColor")
+                    .ignoresSafeArea()
+                
+                VStack(spacing: 0) {
+                    // Header
+                    HStack {
+                        Text("My Diary")
+                            .font(.title2)
+                            .bold()
+                        Spacer()
+                        Image("Bookmark Icon")
+                        Image( "Notification Icon")
+                    }
+                    .padding()
+                    
+                    // Search bar
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                        TextField("Search...", text: $searchText)
+                    }
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(30)
+                    .padding(.horizontal)
+
+                    // Diary entries scroll view
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            ForEach(diaryEntries.filter {
+                                searchText.isEmpty ||
+                                $0.date.lowercased().contains(searchText.lowercased()) ||
+                                $0.content.lowercased().contains(searchText.lowercased())
+                            }) { entry in
+                                HStack(alignment: .top, spacing: 15) {
+                                    Image(entry.imageName)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 70, height: 70)
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(entry.date)
+                                            .font(.headline)
+                                        Text(entry.content)
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                            .lineLimit(3)
+                                    }
+                                    Spacer()
+                                }
+                                .padding(.horizontal)
+                            }
+                        }
+                        .padding(.top)
+                        .padding(.bottom, navBarHeight + 16)
+                    }
+
+                    Spacer()
+                    bottomTabBar
+                }
+            }
+            .navigationDestination(isPresented: $showHomeNav) { HomeView() }
+            .navigationDestination(isPresented: $showResource) { ResourcesView() }
+            .navigationDestination(isPresented: $showSetGoal) { SetGoalView() }
+            .navigationDestination(isPresented: $showAnalyticsNav) { AnalyticsPageView() }
+            .navigationDestination(isPresented: $showSettingNav) { SettingView() }
+            .navigationBarBackButtonHidden(true)
+        }
+    }
+
+    private var bottomTabBar: some View {
+        HStack {
+            Spacer()
+            Button { withAnimation(.none) { showHomeNav = true } } label: {
+                Image("Home Button")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 36, height: 36)
+            }
+            Spacer()
+            Button { withAnimation(.none) { showResource = true } } label: {
+                Image("Resource Button")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 36, height: 36)
+            }
+            Spacer()
+            Button { withAnimation(.none) { showSetGoal = true } } label: {
+                Image("Set Goal Button")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 36, height: 36)
+            }
+            Spacer()
+            Button { withAnimation(.none) { showAnalyticsNav = true } } label: {
+                Image("Analytics Button")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 36, height: 36)
+            }
+            Spacer()
+            Button { withAnimation(.none) { showSettingNav = true } } label: {
+                Image("Setting Button")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 36, height: 36)
+            }
+            Spacer()
+        }
+        .frame(height: navBarHeight)
+        .padding(.top, 8)
+        .background(
+            Color.white
+                .cornerRadius(30, corners: [.topLeft, .topRight])
+                .edgesIgnoringSafeArea(.bottom)
+                .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: -2)
+        )
+    }
+}
+
+#Preview {
+    NotificationView()
+}
